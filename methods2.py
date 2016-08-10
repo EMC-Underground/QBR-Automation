@@ -10,23 +10,24 @@ repJsonData = {}
 
 from botocore.client import Config
 
+#load ECS config file
 with open('ECSconfig.json') as config_file:
   config = json.load(config_file)
 
+#function for getting Account Rep's Account Names and GDUNS
 def getRepFunction(lastname, firstname, middle):
   global repJsonData
   print lastname
   print firstname
   print middle
  
+ #get rep account data
   url = "http://pnwreport.bellevuelab.isus.emc.com/api/rep/"+lastname+"/"+firstname+"/"+middle
   myResponse = requests.get(url)
   repJsonData = json.loads(myResponse.content)
 
-  #print repJsonData
 
-  print len(repJsonData['rows'])
-
+ #build Array of Account Names and GDUNS 
   allAccountArray = []
   for x in range(0,len(repJsonData['rows'])):
     temp = ""
@@ -39,43 +40,58 @@ def getRepFunction(lastname, firstname, middle):
       else:
         break
 
-  print allAccountArray    
- 
 
-# Send accountsArray back to front end javascript  to populate dropdown
+  print allAccountArray    
+  allAccount = json.dumps(allAccountArray) 
+  allAccountJson = json.loads(allAccount)
+  print "break"
+  print allAccountJson
+
+
+#   Figure out how to Send accountsArray back to front end javascript  to populate dropdown
  
   return "Rep info: lastname: {0} firstname: {1} middle initial: {2}!".format(lastname, firstname, middle)
 
+# Function to load what keys to pull for from the Install Data
+def getKeyList(keyfilename):
   
-def getInstallData(gdun):
+  keyfile = open(keyfilename, mode = 'r')
 
+  keyarray = []
+  for line in keyfile:
+    keyarray.append(line.rstrip())
+  keyfile.close()
+
+  return  keyarray
+
+# Function to pull account Install base, create CSV and upload it to ECS
+def getInstallData(gdun):
+  
+  #get list of keys to include on CSV
+  keyArray = getKeyList('keylist.txt')
+  
+  #Get intall data 
   url = "http://pnwreport.bellevuelab.isus.emc.com/api/installs/"+gdun
   myResponse = requests.get(url)
   installJsonData = json.loads(myResponse.content)
-  install_json = installJsonData['rows']
+    
+  
   # open a file for writing
- 
-  install_data = open('/tmp/InstallData.csv','w')
+
+  install_data = open('InstallData.csv','w')
 
   # create the csv writer object
 
   csvwriter = csv.writer(install_data)
-  count = 0
-  for item_num in install_json:
-    if count ==0:
-      header = item_num.keys()
-      csvwriter.writerow(header)
-      count +=1
-    csvwriter.writerow(item_num.values())
+  csvwriter.writerow(keyArray)
+  for item in installJsonData['rows']:
+    tempArray = []
+    for subkey in keyArray:
+      tempArray.append(item[subkey])
+    csvwriter.writerow(tempArray)
   install_data.close()
   
-  print(gdun)
 
-  csvwriter= csv.writer(install_json)
-
-  return "you got the install information for Gdun: {0}".format(gdun)
-
-#def getInstallData(accountName):
  # global repJsonData 
   #print accountName
   #print repJsonData
@@ -84,13 +100,14 @@ def getInstallData(gdun):
     #   gdun = repJsonData['rows'][x]['Global Duns Number']
      #  print gdun
 
-  #s3 = boto3.resource('s3',
-                   #   use_ssl=False,
-		    #  endpoint_url=config['ecs_url'],
-		    #  aws_access_key_id=config['ecs_user_id'],
-		    #  aws_secret_access_key=config['ecs_user_access_key'],
-		    #  config=Config(s3={'addressing_style':'path'}))
+  s3 = boto3.resource('s3',
+                      use_ssl=False,
+		      endpoint_url=config['ecs_url'],
+		      aws_access_key_id=config['ecs_user_id'],
+		      aws_secret_access_key=config['ecs_user_access_key'],
+		      config=Config(s3={'addressing_style':'path'}))
  
+  
   
   #userBucket = s3.Bucket('pacnwinstalls')
   
@@ -99,7 +116,7 @@ def getInstallData(gdun):
   #print(json.loads(userObject['Body'].read()))
  
 
-#  return "You got the install information for Account Name: {0}".format(accountName)
+  return "You got the install information for Gdun: {0}".format(gdun)
   
 
 
