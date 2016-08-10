@@ -6,7 +6,6 @@ import urllib2
 import csv
 
 
-repJsonData = {}
 
 from botocore.client import Config
 
@@ -16,7 +15,6 @@ with open('ECSconfig.json') as config_file:
 
 #function for getting Account Rep's Account Names and GDUNS
 def getRepFunction(lastname, firstname, middle):
-  global repJsonData
   print lastname
   print firstname
   print middle
@@ -78,7 +76,8 @@ def getInstallData(gdun):
   
   # open a file for writing
 
-  install_data = open('InstallData.csv','w')
+  installfile =  'InstallData.csv'
+  install_data = open(installfile,'w')
 
   # create the csv writer object
 
@@ -99,15 +98,19 @@ def getInstallData(gdun):
    # if repJsonData['rows'][x]['Global Duns Name'] == accountName:
     #   gdun = repJsonData['rows'][x]['Global Duns Number']
      #  print gdun
-
+  
+  bucket = 'QBR_Files'
+  filename = gdun + 'InstallData'
   s3 = boto3.resource('s3',
                       use_ssl=False,
 		      endpoint_url=config['ecs_url'],
 		      aws_access_key_id=config['ecs_user_id'],
 		      aws_secret_access_key=config['ecs_user_access_key'],
 		      config=Config(s3={'addressing_style':'path'}))
- 
   
+  response = s3.Object(bucket, filename).put(Body=installfile)
+  print (response)
+
   
   #userBucket = s3.Bucket('pacnwinstalls')
   
