@@ -41,14 +41,13 @@ def getRepFunction(lastname, firstname, middle):
 
   print allAccountArray    
   allAccount = json.dumps(allAccountArray) 
-  allAccountJson = json.loads(allAccount)
   print "break"
-  print allAccountJson
+  print allAccount
 
 
 #   Figure out how to Send accountsArray back to front end javascript  to populate dropdown
  
-  return "Rep info: lastname: {0} firstname: {1} middle initial: {2}!".format(lastname, firstname, middle)
+  return str(allAccountArray) + '\n' + str(allAccount) 
 
 # Function to load what keys to pull for from the Install Data
 def getKeyList(keyfilename):
@@ -76,8 +75,8 @@ def getInstallData(gdun):
   
   # open a file for writing
 
-  installfile =  'InstallData.csv'
-  install_data = open(installfile,'w')
+  installfilename =  'InstallData.csv'
+  install_data = open(installfilename,'w')
 
   # create the csv writer object
 
@@ -100,18 +99,19 @@ def getInstallData(gdun):
      #  print gdun
   
   bucket = 'QBR_Files'
-  filename = gdun + 'InstallData'
+  filename = gdun + '_Install_Data'
   s3 = boto3.resource('s3',
                       use_ssl=False,
 		      endpoint_url=config['ecs_url'],
 		      aws_access_key_id=config['ecs_user_id'],
 		      aws_secret_access_key=config['ecs_user_access_key'],
 		      config=Config(s3={'addressing_style':'path'}))
-  
-  response = s3.Object(bucket, filename).put(Body=installfile)
-  print (response)
+  s3.Bucket(bucket).upload_file(installfilename, filename)  
+ # response = s3.Object(bucket, filename).put(Body=install_data)
+ # install_data.close()
+ # print (response)
 
-  
+  print 'file ' + gdun + '_Install_Data   was added to the bucket: ' + bucket  
   #userBucket = s3.Bucket('pacnwinstalls')
   
   #userObject = userBucket.Object('{0}.json'.format(gdun)).get()
@@ -120,7 +120,7 @@ def getInstallData(gdun):
  
 
   return "You got the install information for Gdun: {0}".format(gdun)
-  
+ 
 
 
 
