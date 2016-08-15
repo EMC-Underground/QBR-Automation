@@ -50,14 +50,23 @@ def getRepFunction(lastname, firstname, middle):
   return str(allAccountArray) + '\n' + str(allAccount) 
 
 # Function to load what keys to pull for from the Install Data
-def getKeyList(keyfilename):
+def getInstallKeyList(keyfilename):
   
-  keyfile = open(keyfilename, mode = 'r')
+  with open(keyfilename) as keylist_file:
+    keylist = json.load(keylist_file)
 
+  print keylist
   keyarray = []
-  for line in keyfile:
-    keyarray.append(line.rstrip())
-  keyfile.close()
+  for k, v in keylist.items():
+    if v == 'true':
+      keyarray.append(k)
+ 
+  print keyarray
+
+  #keyarray = []
+  #for line in keyfile:
+  #  keyarray.append(line.rstrip())
+  #keyfile.close()
 
   return  keyarray
 
@@ -65,8 +74,10 @@ def getKeyList(keyfilename):
 def getInstallData(gdun):
   
   #get list of keys to include on CSV
-  keyArray = getKeyList('keylist.txt')
-  
+  keyArrayInstall = getInstallKeyList('keylistJson.json')
+ 
+  print keyArrayInstall
+
   #Get intall data 
   url = "http://pnwreport.bellevuelab.isus.emc.com/api/installs/"+gdun
   myResponse = requests.get(url)
@@ -81,22 +92,14 @@ def getInstallData(gdun):
   # create the csv writer object
 
   csvwriter = csv.writer(install_data)
-  csvwriter.writerow(keyArray)
+  csvwriter.writerow(keyArrayInstall)
   for item in installJsonData['rows']:
     tempArray = []
-    for subkey in keyArray:
+    for subkey in keyArrayInstall:
       tempArray.append(item[subkey])
     csvwriter.writerow(tempArray)
   install_data.close()
   
-
- # global repJsonData 
-  #print accountName
-  #print repJsonData
-  #for x in range (0,len(repJsonData['rows'])):
-   # if repJsonData['rows'][x]['Global Duns Name'] == accountName:
-    #   gdun = repJsonData['rows'][x]['Global Duns Number']
-     #  print gdun
   
   bucket = 'QBR_Files'
   filename = gdun + '_Install_Data'
@@ -106,17 +109,12 @@ def getInstallData(gdun):
 		      aws_access_key_id=config['ecs_user_id'],
 		      aws_secret_access_key=config['ecs_user_access_key'],
 		      config=Config(s3={'addressing_style':'path'}))
+
   s3.Bucket(bucket).upload_file(installfilename, filename)  
- # response = s3.Object(bucket, filename).put(Body=install_data)
- # install_data.close()
- # print (response)
 
   print 'file ' + gdun + '_Install_Data   was added to the bucket: ' + bucket  
-  #userBucket = s3.Bucket('pacnwinstalls')
   
-  #userObject = userBucket.Object('{0}.json'.format(gdun)).get()
   
-  #print(json.loads(userObject['Body'].read()))
  
 
   return "You got the install information for Gdun: {0}".format(gdun)
