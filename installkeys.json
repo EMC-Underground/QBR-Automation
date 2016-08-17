@@ -1,0 +1,26 @@
+{
+  "CS_CUSTOMER_NAME":"true",
+  "PARTY_NUMBER":"true",
+  "GLOBAL_DUNS_NUMBER":"true",
+  "ITEM_SERIAL_NUMBER":"true",
+  "MODEL_UNIQUE_IDENTIFIER":"false",
+  "ITEM_INSTALL_DATE":"true",
+  "MODEL":"true",
+  "ITEM_DESCRIPTION":"false",
+  "ITEM_NUM":"false",
+  "PRODUCT_GROUP":"false",
+  "PRODUCT_TYPE": "false",
+  "PRODUCT_FAMILY": "false",
+  "INSTANCE_PRODUCT_FAMILY": "false",
+  "INSTALL_BASE_STATUS":"true",
+  "MICROCODE": "false",
+  "MAINTAINED_BY_GROUP": "false",
+  "CONNECT_IN_TYPE": "false",
+  "CONNECT_HOME_TYPE": "false",
+  "CONNECTED_TO_SN": "false",
+  "SYR_LAST_DIAL_HOME_DATE":"true",
+  "SALES_ORDER": "false",
+  "SALES_ORDER_TYPE": "false",
+  "CONTRACT_NUMBER": "false"
+
+  } 

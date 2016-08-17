@@ -1,0 +1,18 @@
+{
+  "PARTY_NAME":"false",
+  "PARTY_NUMBER":"false",
+  "GLOBAL_DUNS_NAME":"true",
+  "GLOBAL_DUNS_NUMBER":"true",
+  "SR":"true",
+  "SERIAL_NUMBER":"true",
+  "SR_STATUS":"true",
+  "SEV":"true",
+  "SR_CREATE_DATE":"true",
+  "SR_AGE_DAYS":"true",
+  "SR_LAST_UPDATE_DATE":"true",
+  "SR_OWNER_NAME":"false",
+  "PRODUCT_DESCRIPTION":"false",
+  "PRODUCT_FAMILY":"false",
+  "SR_CREATOR":"false",
+  "SR_CREATE_METHOD":"false"
+  } 
