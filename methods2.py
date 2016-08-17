@@ -6,7 +6,6 @@ import urllib2
 import csv
 
 
-
 from botocore.client import Config
 
 #load ECS config file
