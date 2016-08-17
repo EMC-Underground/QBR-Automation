@@ -159,7 +159,6 @@ def getInstallData(gdun):
   #push srs CSV to ECS
   
   srsfilename = gdun + '_SRS_Data'
-
   s3.Bucket(bucket).upload_file(srsfile, srsfilename)
 
   return "You got the install and SRS information for Gdun: {0}".format(gdun)
