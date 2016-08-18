@@ -28,7 +28,7 @@ def getRepFunction(lastname, firstname, middle):
   allAccountArray = []
   for x in range(0,len(repJsonData['rows'])):
     temp = ""
-    temp = "{"+"Global Duns Name"+":"+repJsonData['rows'][x]['Global Duns Name']+","+"Global Duns Number" + ":" + repJsonData['rows'][x]['Global Duns Number']+"}"
+    temp = '{"Global_Duns_Name":"'+repJsonData['rows'][x]['Global Duns Name']+'", "Global Duns Number":"' + repJsonData['rows'][x]['Global Duns Number']+'"}'
     if not allAccountArray:
       allAccountArray.append(temp)
     for y in range(0,len(repJsonData['rows'])):
@@ -37,16 +37,14 @@ def getRepFunction(lastname, firstname, middle):
       else:
         break
 
-
+  #allAccountJson = '{"accounts" : [ '+ allAccountArray + ']}'
   print allAccountArray    
-  allAccount = json.dumps(allAccountArray) 
   print "break"
-  print allAccount
+   
+  allAccountJson = json.dumps(allAccountArray) 
+  allAccountString = str(allAccountJson)
 
-
-#   Figure out how to Send accountsArray back to front end javascript  to populate dropdown
- 
-  return str(allAccountArray) + '\n' + str(allAccount) 
+  return  allAccountString
 
 # Function to load what keys to pull for from the Install Data
 def getInstallKeyList(install_keyfile):
