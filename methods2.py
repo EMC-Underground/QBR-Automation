@@ -28,7 +28,7 @@ def getRepFunction(lastname, firstname, middle):
   allAccountArray = []
   for x in range(0,len(repJsonData['rows'])):
     temp = ""
-    temp = '{"Global_Duns_Name":"'+repJsonData['rows'][x]['Global Duns Name']+'", "Global Duns Number":"' + repJsonData['rows'][x]['Global Duns Number']+'"}'
+    temp = '{"Global_Duns_Name":"'+repJsonData['rows'][x]['Global Duns Name']+'", "Global_Duns_Number":"' + repJsonData['rows'][x]['Global Duns Number']+'"}'
     if not allAccountArray:
       allAccountArray.append(temp)
     for y in range(0,len(repJsonData['rows'])):
@@ -83,7 +83,8 @@ def getSRSKeyList(srskeyfile):
 # Function to pull account Install base, create CSV and upload it to ECS
 def getInstallData(gdun):
   
-  #get list of Install keys to include on CSV
+  print gdun
+#get list of Install keys to include on CSV
   keyArrayInstall = getInstallKeyList('installkeys.json')
  
   print keyArrayInstall
