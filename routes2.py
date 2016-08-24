@@ -21,8 +21,8 @@ def repFunction(lastname, firstname, middle):
 @app.route("/account/<gdun>", methods = ['POST'])
 def getInstallData(gdun):
   if request.method == 'POST':
-    #accountName = request.get_json()
-    return methods2.getInstallData(gdun)
+    payload = request.get_json()
+    return methods2.getInstallData(gdun, payload)
   else:
     return "Invalid"
 

@@ -81,8 +81,9 @@ def getSRSKeyList(srskeyfile):
   return srskeyarray
 
 # Function to pull account Install base, create CSV and upload it to ECS
-def getInstallData(gdun):
-  
+def getInstallData(gdun, teaminfo):
+  print teaminfo
+#  print payload
   print gdun
 #get list of Install keys to include on CSV
   keyArrayInstall = getInstallKeyList('installkeys.json')
@@ -160,6 +161,15 @@ def getInstallData(gdun):
   srsfilename = gdun + '_SRS_Data'
   s3.Bucket(bucket).upload_file(srsfile, srsfilename)
 
+ #push json of account team info to ECS
+  
+  teaminfo_filename = gdun + '_teaminfo'
+
+  response = s3.Object(bucket,teaminfo_filename).put(Body=teaminfo)
+  print(response) 
+
+
+  print 'file ' + teaminfo_filename + " was uploaded into the bucket " + bucket +  "with the following contents: " + teaminfo
   return "You got the install and SRS information for Gdun: {0}".format(gdun)
  
 
