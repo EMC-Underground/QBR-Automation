@@ -13,10 +13,8 @@ port = 8000
 def repFunction(lastname, firstname, middle):
   if request.method == 'GET':
     return  methods2.getRepFunction(lastname,firstname,middle) 
-    
   else: 
     return "Invalid"
-
 
 @app.route("/account/<gdun>", methods = ['POST'])
 def getInstallData(gdun):
@@ -25,13 +23,6 @@ def getInstallData(gdun):
     return methods2.getInstallData(gdun, payload)
   else:
     return "Invalid"
-
-#@app.route("/account/<accountName>", methods = ['GET'])
-#def getInstallData(accountName):
-#  if request.method == 'GET':
-#    return methods2.getInstallData(accountName)
-#  else: 
-#    return "Invalid"
 
 
 if __name__ == "__main__":

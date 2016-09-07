@@ -3,7 +3,7 @@ import requests
 import boto3
 import json
 import urllib2
-import csv
+import unicodecsv as csv
 
 
 from botocore.client import Config
@@ -37,11 +37,11 @@ def getRepFunction(lastname, firstname, middle):
       else:
         break
 
-  #allAccountJson = '{"accounts" : [ '+ allAccountArray + ']}'
   print allAccountArray    
-  print "break"
-   
+  
+  #remove unicode
   allAccountJson = json.dumps(allAccountArray) 
+  #convert JSON to string
   allAccountString = str(allAccountJson)
 
   return  allAccountString
@@ -56,12 +56,6 @@ def getInstallKeyList(install_keyfile):
   for k, v in install_keylist.items():
     if v == 'true':
       installKeyArray.append(k.rstrip())
-  print installKeyArray
-
-  #keyarray = []
-  #for line in keyfile:
-  #  keyarray.append(line.rstrip())
-  #keyfile.close()
 
   return installKeyArray
 
@@ -70,29 +64,27 @@ def getSRSKeyList(srskeyfile):
   
   with open(srskeyfile) as srskeylist_file:
     srskeylist = json.load(srskeylist_file)
-
-  print srskeylist
-  srskeyarray=[]
+  
+  srskeyarray=[]  
   for k, v in srskeylist.items():
     if v == 'true':
       srskeyarray.append(k.rstrip())
-  print srskeyarray
 
   return srskeyarray
 
 # Function to pull account Install base, create CSV and upload it to ECS
 def getInstallData(gdun, teaminfo):
-  print teaminfo
-#  print payload
   print gdun
-#get list of Install keys to include on CSV
+
+#  print teaminfo
+
+  #get list of Install keys to include on CSV
   keyArrayInstall = getInstallKeyList('installkeys.json')
- 
-  print keyArrayInstall
+#  print keyArrayInstall
 
   #get list of SRS  keys to include on CSV
   keyArraySRS = getSRSKeyList('srskeys.json')
-  print keyArraySRS
+#  print keyArraySRS
 
 
   #Get intall data 
@@ -100,7 +92,8 @@ def getInstallData(gdun, teaminfo):
   myResponse = requests.get(url)
   installJsonData = json.loads(myResponse.content)
     
-  
+#  installJsonData = installJsonData.encode('ascii', 'ignore').decode('ascii')
+
   # open a file for writing install data
 
   installfilename =  'InstallData.csv'
@@ -154,7 +147,6 @@ def getInstallData(gdun, teaminfo):
     SRScsvwriter.writerow(SRStempArray)
   srsdata.close()
 
-#
 
   #push srs CSV to ECS
   
