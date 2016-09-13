@@ -76,31 +76,24 @@ def getSRSKeyList(srskeyfile):
 def getInstallData(gdun, teaminfo):
   print gdun
 
-#  print teaminfo
 
   #get list of Install keys to include on CSV
   keyArrayInstall = getInstallKeyList('installkeys.json')
-#  print keyArrayInstall
 
   #get list of SRS  keys to include on CSV
   keyArraySRS = getSRSKeyList('srskeys.json')
-#  print keyArraySRS
-
 
   #Get intall data 
   url = "http://pnwreport.bellevuelab.isus.emc.com/api/installs/"+gdun
   myResponse = requests.get(url)
   installJsonData = json.loads(myResponse.content)
     
-#  installJsonData = installJsonData.encode('ascii', 'ignore').decode('ascii')
 
   # open a file for writing install data
-
   installfilename =  'InstallData.csv'
   install_data = open(installfilename,'w')
 
   # create the csv writer object
-
   csvwriter = csv.writer(install_data)
   csvwriter.writerow(keyArrayInstall)
   for item in installJsonData['rows']:
@@ -125,19 +118,16 @@ def getInstallData(gdun, teaminfo):
   print 'file ' + gdun + '_Install_Data   was added to the bucket: ' + bucket  
   
   #Get SRS data
-  
   srsUrl = "http://pnwreport.bellevuelab.isus.emc.com/api/srs/"+gdun
   srsResponse = requests.get(srsUrl)
   srsJsonData = json.loads(srsResponse.content)
   
   # open a file for writing srs data
-  
   srsfile = 'SRSData.csv'
   srsdata = open(srsfile, 'w')
 
 
   #create the csv writer object
- 
   SRScsvwriter = csv.writer(srsdata)
   SRScsvwriter.writerow(keyArraySRS)
   for item in srsJsonData['rows']:
@@ -149,12 +139,10 @@ def getInstallData(gdun, teaminfo):
 
 
   #push srs CSV to ECS
-  
   srsfilename = gdun + '_SRS_Data'
   s3.Bucket(bucket).upload_file(srsfile, srsfilename)
 
  #push json of account team info to ECS
-  
   teaminfo_filename = gdun + '_teaminfo'
 
   response = s3.Object(bucket,teaminfo_filename).put(Body=teaminfo)
