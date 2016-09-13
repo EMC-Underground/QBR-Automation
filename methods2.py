@@ -162,7 +162,7 @@ def getInstallData(gdun, teaminfo):
 
 
   print 'file ' + teaminfo_filename + " was uploaded into the bucket " + bucket +  "with the following contents: " + teaminfo
-  return "You got the install and SRS information for Gdun: {0}".format(gdun)
+  return "You completed the first step of your QBR please contact shared services to create your presentation "
  
 
 
